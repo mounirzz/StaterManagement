@@ -19,7 +19,6 @@ public class SampleController extends CrudController<Sample, SampleService> {
 
 	@Override
 	public boolean isAuthorized(Long entityId, SampleService service) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
