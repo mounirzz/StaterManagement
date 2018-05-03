@@ -122,7 +122,14 @@ public class UserService implements UserDetailsService {
 		}
 		return resetToken ;
 	}
-
+	public User resetActivation(String email) {
+		User u = this.userRepository.findOneByEmail(email);
+		if (u != null) {
+			createActivationToken(u, true);
+			return u;
+		}
+		return null;
+	}
 	public boolean restPassword(User user) {
 		User u = this.userRepository.findOneByUserName(user.getUserName());
 		if (u != null) {
