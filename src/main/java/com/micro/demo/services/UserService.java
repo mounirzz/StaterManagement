@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.micro.demo.Application;
 import com.micro.demo.SpringStaterApplication;
 import com.micro.demo.models.User;
 import com.micro.demo.repositories.UserRepository;
@@ -38,13 +40,14 @@ public class UserService implements UserDetailsService {
 
 	public final String CURRENT_USER_KEY = "CURRENT_USER ";
 
-	public UserDetails loadUserBYname(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findOneByUserNameOrEmail(username, username);
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
 		if (requireActivation && !user.getToken().equals("1")) {
-			// SpringStaterApplication.log.
+
+			Application.log.error("user [" + username + "] tired to login but is not activated");
 			throw new UsernameNotFoundException(username + "has not been activated yet");
 		}
 		httpSession.setAttribute(CURRENT_USER_KEY, user);
@@ -153,10 +156,5 @@ public class UserService implements UserDetailsService {
 		this.userRepository.updateProfilePicture(user.getUserName(), profilePicture);
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
