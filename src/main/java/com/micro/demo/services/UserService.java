@@ -140,6 +140,9 @@ public class UserService implements UserDetailsService {
 	public void updateUser(String username,User newData) {
 		this.userRepository.updateUser(username, newData.getEmail(), newData.getFirstname(), newData.getLastname(), newData.getAddress(), newData.getCompanyName());
 	}
+	public User getLoggedInUser() {
+		return getLoggedInUser(false);
+	}
 	public User getLoggedInUser(boolean forceFresh) {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = (User) httpSession.getAttribute(CURRENT_USER_KEY);

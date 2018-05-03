@@ -40,7 +40,17 @@ public class ExceptionAdapter {
 			throw e ;
 		}
 		// Otherwise setup and send the user to a default error view
-		User user = userService.getLo
+		User user = userService.getLoggedInUser();
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("exception",e);
+		mav.addObject("url",req.getRequestURI());
+		mav.addObject("user" , user);
+		mav.addObject("support", supportEmail);
+		mav.setViewName(DEFAULT_ERROR_VIEW);
+		if (!environment.equals("DEV")) {
+			mailService.sendErrorEmail(e, req, user);
+		}
+		e.printStackTrace();
 		return mav;
 	}
 }

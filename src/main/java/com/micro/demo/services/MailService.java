@@ -53,7 +53,7 @@ public class MailService {
 	public void sendNewActivationRequest(String to , String token) {
 		sendNewRegistration(to, token);
 	}
-	public void senErrorEmail(Exception e, HttpServletRequest req,User user) {
+	public void sendErrorEmail(Exception e, HttpServletRequest req,User user) {
 		String subject = "Application Error:" +req.getRequestURI();
 		String text = "An Error occured in your application: " + e + "\r\nFor user: " + user.getEmail();
 		sendEmail(supportEmail,subject, text);
