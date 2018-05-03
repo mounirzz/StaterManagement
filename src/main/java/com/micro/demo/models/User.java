@@ -37,6 +37,7 @@ public class User {
 	private String companyName;
 	private String lastLogin ;
 	private String profilePicture ;
+	
 	public Long getId() {
 		return id;
 	}

@@ -10,7 +10,10 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 	public abstract void setRepo(R repo);
 
 	/**
-	 * 
+	 * Define the parameters that you want to save to the DB when calling the update() method
+	 * @param from source object
+	 * @param to DB object that gets saves "return to" in this method
+	 * @return
 	 */
 	public abstract M copy(M from, M to);
 
@@ -19,7 +22,10 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 	}
 
 	/**
-	 * 
+	 * Mainly used to create a new entity
+	 * however, can also be used to save something without using the update() method.
+	 * @param model
+	 * @return saved entity model
 	 */
 	public M save(M model) {
 		return this.repo.save(model);

@@ -13,7 +13,7 @@ public class LoginAdapter implements ApplicationListener<InteractiveAuthenticati
 
 	@Override
 	public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
-		userservice.
+		userservice.updateLastLogin(event.getAuthentication().getName());
 		
 	}
 

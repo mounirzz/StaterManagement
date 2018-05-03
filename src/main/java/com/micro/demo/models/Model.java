@@ -11,38 +11,41 @@ import javax.persistence.Version;
 
 @MappedSuperclass
 public abstract class Model {
-	@GeneratedValue
-	@Id
-	private Long id;
+    @GeneratedValue
+    @Id
+    private Long id;
 
-	private Date dateCreated;
+    private Date dateCreated;
 
-	@Version
-	private Timestamp dateModified;
+    @Version
+    private Timestamp dateModified;
 
-	@PrePersist
-	void createdAt() {
-		this.setDateCreated(new Date());
-	}
+    @PrePersist
+    void createdAt() {
+        this.setDateCreated(new Date());
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Date gerDateCreated() {
-		return dateCreated;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
-	public Timestamp getDateModified() {
-		return dateModified;
-	}
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
-	public void setDateModified(Timestamp dateModified) {
-		this.dateModified = dateModified;
-	}
+    public Timestamp getDateModified() {
+        return dateModified;
+    }
 
+    public void setDateModified(Timestamp dateModified) {
+        this.dateModified = dateModified;
+    }
 }

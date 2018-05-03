@@ -18,33 +18,33 @@ import com.micro.demo.services.UserService;
 public class ExceptionAdapter {
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	MailService mailService;
-	
+
 	@Value("${app.email.support}")
 	private String supportEmail;
-	
+
 	@Value("${app.environment}")
 	private String environment;
-	
+
 	public static final String DEFAULT_ERROR_VIEW = "error";
-	
+
 	@ExceptionHandler(value = Exception.class)
 	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-		//if the exception is annotated with @ResponseStatuts rethrow it and let
-		//the framework handle it - like the OrderNotFoundException exemple 
-		//at the start of this post .
-		//AnnotationUtils is a Spring Framework utility class.
-		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class)!= null) {
-			throw e ;
+		// if the exception is annotated with @ResponseStatuts rethrow it and let
+		// the framework handle it - like the OrderNotFoundException exemple
+		// at the start of this post .
+		// AnnotationUtils is a Spring Framework utility class.
+		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
+			throw e;
 		}
 		// Otherwise setup and send the user to a default error view
 		User user = userService.getLoggedInUser();
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("exception",e);
-		mav.addObject("url",req.getRequestURI());
-		mav.addObject("user" , user);
+		mav.addObject("exception", e);
+		mav.addObject("url", req.getRequestURI());
+		mav.addObject("user", user);
 		mav.addObject("support", supportEmail);
 		mav.setViewName(DEFAULT_ERROR_VIEW);
 		if (!environment.equals("DEV")) {
