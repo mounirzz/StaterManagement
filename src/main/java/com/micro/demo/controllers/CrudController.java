@@ -28,7 +28,7 @@ public abstract class CrudController<M extends Model, S extends CrudService<M, ?
 		@RequestMapping(value="/update", method = RequestMethod.POST)
 		public M update(M object) {
 			if(isAuthorized(object.getId(),service)) {
-				return service.update(object);
+				return service.update(object, object.getId());
 			}
 			logUnauthorizedAccess();
 			return null ;
@@ -45,7 +45,7 @@ public abstract class CrudController<M extends Model, S extends CrudService<M, ?
 	    @RequestMapping(value="/get", method = RequestMethod.GET)
 	    public @ResponseBody M get(Long id) {
 	        if(isAuthorized(id, service)) {
-	            return service.get(
+	            return service.get(id);
 	        }
 	        logUnauthorizedAccess();
 	        return null;

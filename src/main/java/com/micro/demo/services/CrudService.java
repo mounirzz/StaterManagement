@@ -43,7 +43,7 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 	}
 
 	
-	public boolean delete(M id) {
+	public boolean delete(Long id) {
 		this.repo.delete(id);
 		return true;
 	}
