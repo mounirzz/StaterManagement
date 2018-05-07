@@ -46,7 +46,7 @@ public abstract class CrudController<M extends Model, S extends CrudService<M, ?
 	    @RequestMapping(value="/get", method = RequestMethod.GET)
 	    public @ResponseBody M get(Long id) {
 	        if(isAuthorized(id, service)) {
-	            return service.get(id);
+	            return service.get(model);
 	        }
 	        logUnauthorizedAccess();
 	        return null;

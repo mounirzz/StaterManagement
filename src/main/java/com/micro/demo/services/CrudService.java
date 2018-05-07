@@ -1,9 +1,10 @@
 package com.micro.demo.services;
 
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.micro.demo.models.Model;
-
 public abstract class CrudService<M extends Model, R extends CrudRepository<M, Long>> {
 	R repo;
 
@@ -11,11 +12,11 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 
 	/**
 	 * Define the parameters that you want to save to the DB when calling the update() method
-	 * @param from source object
-	 * @param to DB object that gets saves "return to" in this method
+	 * @param model source object
+	 * @param updated DB object that gets saves "return to" in this method
 	 * @return
 	 */
-	public abstract M copy(M from, M to);
+	public abstract M copy(M model, M updated);
 
 	public Iterable<M> getAll() {
 		return this.repo.findAll();
@@ -31,17 +32,17 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 		return this.repo.save(model);
 	}
 
-	public M get(Long id) {
-		return this.repo.findOne(id);
+	public M get(M model) {
+		return this.repo.findOne();
 	}
 
-	public M update(M model) {
-		M updated = this.repo.findOne(model.getId());
+	public M update(M model,Long id) {
+		M updated = this.repo.findOne();
 		updated = copy(model, updated);
 		return this.repo.save(updated);
 	}
 
-	public boolean delete(Long id) {
+	public boolean delete(M id) {
 		this.repo.delete(id);
 		return true;
 	}
