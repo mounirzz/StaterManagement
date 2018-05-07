@@ -32,12 +32,12 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 		return this.repo.save(model);
 	}
 
-	public M get(M model) {
-		return this.repo.findOne();
+	public M get(Long id) {
+		return this.repo.findOne(id);
 	}
 
 	public M update(M model,Long id) {
-		M updated = this.repo.findOne();
+		M updated = this.repo.findOne(id);
 		updated = copy(model, updated);
 		return this.repo.save(updated);
 	}

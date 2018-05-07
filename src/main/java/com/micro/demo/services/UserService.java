@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.micro.demo.Application;
-import com.micro.demo.SpringStaterApplication;
+import com.micro.demo.adapters.SpringStaterApplication;
 import com.micro.demo.models.User;
 import com.micro.demo.repositories.UserRepository;
 import com.mysql.jdbc.Security;

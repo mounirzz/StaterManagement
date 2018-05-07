@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.micro.demo.models.Model;
 import com.micro.demo.services.CrudService;
 
-import net.bytebuddy.asm.Advice.Return;
 
 @RestController
 public abstract class CrudController<M extends Model, S extends CrudService<M, ? extends CrudRepository<M,Long>>>  {
@@ -46,7 +45,7 @@ public abstract class CrudController<M extends Model, S extends CrudService<M, ?
 	    @RequestMapping(value="/get", method = RequestMethod.GET)
 	    public @ResponseBody M get(Long id) {
 	        if(isAuthorized(id, service)) {
-	            return service.get(model);
+	            return service.get(
 	        }
 	        logUnauthorizedAccess();
 	        return null;

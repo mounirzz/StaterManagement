@@ -1,4 +1,4 @@
-package com.micro.demo;
+package com.micro.demo.adapters;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

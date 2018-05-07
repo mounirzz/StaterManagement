@@ -1,4 +1,4 @@
-package com.micro.demo;
+package com.micro.demo.adapters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
