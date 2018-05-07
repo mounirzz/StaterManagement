@@ -87,7 +87,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean delete(Long id) {
-		this.userRepository.deleteById(id);
+		this.userRepository.delete(id);
 		return true;
 	}
 
