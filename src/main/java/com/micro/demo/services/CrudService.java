@@ -42,6 +42,7 @@ public abstract class CrudService<M extends Model, R extends CrudRepository<M, L
 		return this.repo.save(updated);
 	}
 
+	
 	public boolean delete(M id) {
 		this.repo.delete(id);
 		return true;
