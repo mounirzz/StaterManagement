@@ -41,10 +41,10 @@ import com.micro.demo.services.UserService;
 public class UserController {
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
-	@Value("${app.user.verification}")
-	private String requireActivation;
+	@Value("${Spring-stater.user.verification}")
+	private boolean requireActivation;
 	
-	@Value("{app.user.root}")
+	@Value("{Spring-stater.user.root}")
 	private String userRoot;
 	
 	@Autowired
