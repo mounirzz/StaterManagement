@@ -3,6 +3,8 @@ package com.micro.demo.controllers;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import javax.mail.Multipart;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +27,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.yaml.snakeyaml.emitter.ScalarAnalysis;
+
 import com.micro.demo.models.User;
 import com.micro.demo.repositories.UserRepository;
 import com.micro.demo.services.MailService;
@@ -203,65 +209,32 @@ public class UserController {
 				
 				ByteArrayInputStream imageInputStream = new ByteArrayInputStream(bytes);
 				BufferedImage image = ImageIO.read(imageInputStream);
-				BufferedImage thumbnail = Scalr.
+				// BufferedImage thumbnail = scalr.resize(image, 200);
+				
+				File thumbnailOut = new File(saveDirectory + fileName);
+				ImageIO.write(null, "png", thumbnailOut);
+				
+				userservice.updateProfilePicture(user, fileName);
+				userservice.getLoggedInUser(true); //Force refresh of cached User
+				System.out.println("image Saved::: "+ fileName);
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
+		return "redirect:/user/edit/" +user.getId();
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
+	@RequestMapping(value="/user/profile-picture", method = RequestMethod.GET)
+	public @ResponseBody byte[] profilePicture() throws IOException {
+		User u = userservice.getLoggedInUser();
+		String profilePicture = userRoot = File.separator + u.getId() + File.separator + u.getProfilePicture();
+		if (new File(profilePicture).exists()) {
+			return IOUtils.toByteArray(new FileInputStream(profilePicture));
+		}else {
+			return null;
+		}
+	}
 	
 	
 	
