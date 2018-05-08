@@ -22,10 +22,10 @@ public class ExceptionAdapter {
 	@Autowired
 	MailService mailService;
 
-	@Value("${app.email.support}")
+	@Value("${Spring-stater.email.support}")
 	private String supportEmail;
 
-	@Value("${app.environment}")
+	@Value("${Spring-stater.environment}")
 	private String environment;
 
 	public static final String DEFAULT_ERROR_VIEW = "error";

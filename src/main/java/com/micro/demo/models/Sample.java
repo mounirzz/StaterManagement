@@ -1,5 +1,8 @@
 package com.micro.demo.models;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Sample extends Model {
 	private String name;
 

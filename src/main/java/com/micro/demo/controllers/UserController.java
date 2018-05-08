@@ -74,7 +74,7 @@ public class UserController {
 		if (registeredUser != null) {
 			mailservice.sendNewRegistration(user.getEmail(), registeredUser.getToken());
 			if (!requireActivation) {
-				userservice.autologin(user.getUserName());
+				userservice.autoLogin(user.getUserName());
 				return "redirect:/";
 			}
 			return "user/register-success";
@@ -112,9 +112,9 @@ public class UserController {
 	}
 	@RequestMapping(value="/user/reset-password-change", method = RequestMethod.POST)
 	public ModelAndView resetPasswordChangePost(User user , BindingResult result) {
-		boolean isChanged = userservice.restPassword(user);
+		boolean isChanged = userservice.resetPassword(user);
 		if (isChanged) {
-			userservice.autologin(user.getUserName());
+			userservice.autoLogin(user.getUserName());
 			return new ModelAndView("redirect:/");
 		}else {
 			return new ModelAndView("user/rest-password-change","error" , "Password could not be changed");
@@ -144,14 +144,14 @@ public class UserController {
 	public String activate(String activation) {
 		User u = userservice.activate(activation);
 		if (u != null) {
-			userservice.autologin(u);
+			userservice.autoLogin(u);
 			return "redirect:/";
 		}
 		return "redirect:/error?message=Could not activate with this activation code, please contact support";
 	}
 	@RequestMapping("/user/autologin")
 	public String autologin(User user) {
-		userservice.autologin(user.getUserName());
+		userservice.autoLogin(user.getUserName());
 		return "redirect:/";
 	}
 	@RequestMapping("/user/edit/{id}")

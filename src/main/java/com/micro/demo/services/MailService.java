@@ -13,13 +13,13 @@ import com.micro.demo.models.User;
 @Service
 public class MailService {
 	
-	@Value("${app.email.from}")
+	@Value("${Spring-stater.email.from}")
 	private String fromEmail;
 	
-	@Value("${app.url}")
+	@Value("${Spring-stater.url}")
 	private String appUrl;
 	
-	@Value("${app.email.support}")
+	@Value("${Spring-stater.email.support}")
 	private String supportEmail;
 	
 	@Autowired
