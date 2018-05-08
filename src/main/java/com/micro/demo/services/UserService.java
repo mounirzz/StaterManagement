@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
         if(user == null) {
             throw new UsernameNotFoundException(username);
         }
-        if(requireActivation && !user.getToken().equals("1")) {
+        if(requireActivation && !user.getToken().equals("users1")) {
             Application.log.error("User [" + username + "] tried to login but is not activated");
             throw new UsernameNotFoundException(username + " has not been activated yet");
         }
@@ -82,7 +82,11 @@ public class UserService implements UserDetailsService {
 
         return null;
     }
-    
+	public boolean checkLogin(User user) {
+		user = repo.findOneByUserNameOrEmail(user.getUserName(),
+				user.getPassword());
+		return user != null;
+	}
     
     public String encodeUserPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -182,4 +186,9 @@ public class UserService implements UserDetailsService {
     public void updateProfilePicture(User user, String profilePicture) {
         this.repo.updateProfilePicture(user.getUserName(), profilePicture);
     }
+
+	public User findOneByUsernameandPassword(String password, String  userName) {
+		User user = repo.findOneByUsernameandPassword(password, userName);
+		return user ;
+	}
 }

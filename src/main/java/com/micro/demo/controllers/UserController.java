@@ -8,9 +8,14 @@ import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.mail.Multipart;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -36,6 +41,9 @@ import com.micro.demo.models.User;
 import com.micro.demo.repositories.UserRepository;
 import com.micro.demo.services.MailService;
 import com.micro.demo.services.UserService;
+import com.vito16.shop.model.Remember;
+import com.vito16.shop.util.CookieUtil;
+import com.vito16.shop.util.UserUtil;
 
 @Controller
 public class UserController {
@@ -154,6 +162,30 @@ public class UserController {
 		userservice.autoLogin(user.getUserName());
 		return "redirect:/";
 	}
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String doLogin(User user, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        if (userservice.checkLogin(user)) {
+            user = userservice.findOneByUsernameandPassword(user.getUserName(), user.getPassword());
+            UserUtil.saveUserToSession(session, user);
+            logger.info("Rappelez-vous s'il faut se connecter à l'utilisateur:" + request.getParameter("remember"));
+
+            if ("on".equals(request.getParameter("remember"))) {
+                String uuid = UUID.randomUUID().toString();
+                Remember remember = new Remember();
+                remember.setId(uuid);
+                remember.setUser(user);
+                remember.setAddTime(new Date());
+                rememberService.add(remember);
+                CookieUtil.addCookie(response, appConfig.USER_COOKIE_NAME, uuid, appConfig.USER_COOKIE_AGE);
+            } else {
+                CookieUtil.removeCookie(response, appConfig.USER_COOKIE_NAME);
+            }
+            logger.info("Utilisateur[" + user.getUsername() + "]Atterrissage réussi");
+            return "redirect:/";
+        }
+        return "redirect:/user/login?errorPwd=true";
+    }
+	
 	@RequestMapping("/user/edit/{id}")
 	public String edit(@PathVariable("id") Long id , User user) {
 		User u ;
@@ -209,7 +241,7 @@ public class UserController {
 				
 				ByteArrayInputStream imageInputStream = new ByteArrayInputStream(bytes);
 				BufferedImage image = ImageIO.read(imageInputStream);
-				// BufferedImage thumbnail = scalr.resize(image, 200);
+				//BufferedImage thumbnail = scalr.resize(image, 200);
 				
 				File thumbnailOut = new File(saveDirectory + fileName);
 				ImageIO.write(null, "png", thumbnailOut);
