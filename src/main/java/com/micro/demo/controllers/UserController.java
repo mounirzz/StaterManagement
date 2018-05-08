@@ -37,13 +37,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.yaml.snakeyaml.emitter.ScalarAnalysis;
 
+import com.micro.demo.models.Remember;
 import com.micro.demo.models.User;
+import com.micro.demo.repositories.RememberRepository;
 import com.micro.demo.repositories.UserRepository;
 import com.micro.demo.services.MailService;
+import com.micro.demo.services.RememberService;
 import com.micro.demo.services.UserService;
-import com.vito16.shop.model.Remember;
-import com.vito16.shop.util.CookieUtil;
-import com.vito16.shop.util.UserUtil;
+import com.micro.demo.util.CookieUtil;
 
 @Controller
 public class UserController {
@@ -66,6 +67,9 @@ public class UserController {
 	
 	@Autowired
 	private MailService mailservice ;
+	
+	@Autowired
+	private RememberService rememberService ;
 	
 	@RequestMapping("/user/list")
 	public String list(ModelMap map) {
@@ -166,7 +170,7 @@ public class UserController {
     public String doLogin(User user, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (userservice.checkLogin(user)) {
             user = userservice.findOneByUsernameandPassword(user.getUserName(), user.getPassword());
-            UserUtil.saveUserToSession(session, user);
+            com.micro.demo.util.UserUtil.saveUserToSession(session, user);
             logger.info("Rappelez-vous s'il faut se connecter à l'utilisateur:" + request.getParameter("remember"));
 
             if ("on".equals(request.getParameter("remember"))) {
@@ -180,7 +184,7 @@ public class UserController {
             } else {
                 CookieUtil.removeCookie(response, appConfig.USER_COOKIE_NAME);
             }
-            logger.info("Utilisateur[" + user.getUsername() + "]Atterrissage réussi");
+            logger.info("Utilisateur[" + user.getUserName() + "]Atterrissage réussi");
             return "redirect:/";
         }
         return "redirect:/user/login?errorPwd=true";
