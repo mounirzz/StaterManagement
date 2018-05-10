@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.yaml.snakeyaml.emitter.ScalarAnalysis;
 
+import com.micro.demo.adapters.AppConfig;
 import com.micro.demo.models.Remember;
 import com.micro.demo.models.User;
 import com.micro.demo.repositories.RememberRepository;
@@ -45,8 +46,10 @@ import com.micro.demo.services.MailService;
 import com.micro.demo.services.RememberService;
 import com.micro.demo.services.UserService;
 import com.micro.demo.util.CookieUtil;
+import com.micro.demo.util.UserUtil;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -55,6 +58,9 @@ public class UserController {
 	
 	@Value("{Spring-stater.user.root}")
 	private String userRoot;
+	
+	@Autowired
+	private AppConfig appConfig ;
 	
 	@Autowired
 	private UserRepository userRepository ;
@@ -71,6 +77,10 @@ public class UserController {
 	@Autowired
 	private RememberService rememberService ;
 	
+	@RequestMapping(method = RequestMethod.GET)
+	public String index() {
+		return "user/index";
+	}
 	@RequestMapping("/user/list")
 	public String list(ModelMap map) {
 		Iterable<User> users = this.userRepository.findAll();
@@ -166,12 +176,27 @@ public class UserController {
 		userservice.autoLogin(user.getUserName());
 		return "redirect:/";
 	}
+	@RequestMapping(value = "login" , method = RequestMethod.GET)
+	public String loginFrom(HttpServletRequest request , HttpSession session) {
+		String uuid;
+		if ((uuid = CookieUtil.getCookieValue(request, appConfig.USER_COOKIE_NAME)) != null) {
+			Remember remember = rememberService.findById(uuid);
+			if (remember != null && remember.getUser() != null) {
+				if (userservice.checkLogin(remember.getUser())) {
+					UserUtil.saveUserToSession(session, remember.getUser());
+					log.info("L'utilisateur [{}] s'est connecté avec succés avec les cookies.", remember.getUser().getUserName());
+					return "redirect:/";
+				}
+			}
+		}
+		 return "user/userlogin"; 
+	}
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String doLogin(User user, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (userservice.checkLogin(user)) {
             user = userservice.findOneByUsernameandPassword(user.getUserName(), user.getPassword());
             com.micro.demo.util.UserUtil.saveUserToSession(session, user);
-            logger.info("Rappelez-vous s'il faut se connecter à l'utilisateur:" + request.getParameter("remember"));
+            log.info("Rappelez-vous s'il faut se connecter à l'utilisateur:" + request.getParameter("remember"));
 
             if ("on".equals(request.getParameter("remember"))) {
                 String uuid = UUID.randomUUID().toString();
@@ -184,12 +209,18 @@ public class UserController {
             } else {
                 CookieUtil.removeCookie(response, appConfig.USER_COOKIE_NAME);
             }
-            logger.info("Utilisateur[" + user.getUserName() + "]Atterrissage réussi");
+            log.info("Utilisateur[" + user.getUserName() + "]Atterrissage réussi");
             return "redirect:/";
         }
         return "redirect:/user/login?errorPwd=true";
     }
 	
+    @RequestMapping(value="/logout" ,method = RequestMethod.GET)
+    public String profile(HttpSession session,HttpServletResponse response) {
+    	UserUtil.deleteUserFromSession(session);
+    	CookieUtil.removeCookie(response, appConfig.USER_COOKIE_NAME);
+    	return "redirect:/";
+    }
 	@RequestMapping("/user/edit/{id}")
 	public String edit(@PathVariable("id") Long id , User user) {
 		User u ;

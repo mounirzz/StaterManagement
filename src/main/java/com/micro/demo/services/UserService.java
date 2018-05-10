@@ -187,8 +187,8 @@ public class UserService implements UserDetailsService {
         this.repo.updateProfilePicture(user.getUserName(), profilePicture);
     }
 
-	public User findOneByUsernameandPassword(String password, String  userName) {
-		User user = repo.findOneByUsernameandPassword(password, userName);
+	public User findOneByUsernameandPassword(String password, String  username) {
+		User user = repo.findOneByUsernameandPassword(password, username);
 		return user ;
 	}
 }

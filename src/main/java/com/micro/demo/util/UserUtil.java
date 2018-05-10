@@ -35,6 +35,7 @@ public class UserUtil {
      *
      * @param session
      */
+    
     public static void deleteUserFromSession(HttpSession session) {
         session.removeAttribute(USER);
     }
